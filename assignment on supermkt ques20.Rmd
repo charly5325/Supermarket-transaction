@@ -1,0 +1,197 @@
+---
+title: "Assigment"
+author: "A"
+date: "2024-09-12"
+output: html_document
+---
+
+```{r}
+library("tidyverse")
+
+```
+
+```{r}
+superm <- read.csv(file.choose())
+```
+
+```{r}
+str(superm)
+```
+```{r}
+view(superm)
+```
+
+###show the total number of rows and column on the supermarket dataset.questn 1
+```{r}
+dim(superm)
+```
+##show 
+```{r}
+superm%>%
+ filter(Units.Sold =="5")%>%
+   group_by(Product.Family)%>%
+  summarise(customer.purchase_count=n())
+```
+##show the Total revenue realised in the supermarket.questn3
+```{r}
+superm%>%
+  summarise(Total_Revenue=sum(Revenue))
+```
+##show the total count of sales alloted on each  items in the ##Product.category.questn4
+```{r}
+superm%>%
+  group_by(Product.Category)%>%
+  summarise(Total_Revenue=n())
+```
+ ##show the items in dataset that had the highest sales by revenue on product.category in the ##supermarket.questn5
+ 
+```{r}
+superm%>%
+  group_by(Product.Category,Revenue)%>%
+  summarise(Total_count=n())%>%
+  head(1)
+```
+ ##show the top 2 most purchased items in product family.questn6
+```{r}
+superm%>%
+  group_by(Product.Family)%>%
+  summarise(sales_count=n())%>%
+  arrange(desc(sales_count))%>%
+  head(2)
+  
+```
+ ##show the top 2 most purchased items in product.Department.questn7
+```{r}
+superm%>%
+  group_by(Product.Department)%>%
+  summarise(sales_count=n())%>%
+  arrange(desc(sales_count))%>%
+  head(2)
+```
+##show the top 2 most purchased items in product.Category.questn8
+```{r}
+superm%>%
+  group_by(Product.Category)%>%
+  summarise(sales_count=n())%>%
+  arrange(desc(sales_count))%>%
+  head(2)
+```
+##show the total count of sales alloted on different  items in the Product.Departmet.questn9
+```{r}
+superm%>%
+  group_by(Product.Department)%>%
+   summarise(Sales_count=n())
+ 
+```
+##show the items in dataset that had the highest sales by revenue on product.Department in the ##supermarket.quest10
+```{r}
+superm%>%
+  group_by(Product.Department,Revenue)%>%
+  summarise(Total_count=n())%>%
+  head(1)
+```
+#show the total count of customer that had purchased of more than 5 units in the supermarket
+```{r}
+superm%>%
+  filter(Units.Sold>"5")%>%
+  
+  summarise(customer_count=n())
+```
+##show the total count of married  who are home  owners by country that did shopping from the supermarket questn 12
+```{r}
+superm%>%
+  filter(Marital.Status=="M" & Homeowner=="Y")%>%
+  group_by(Country,Marital.Status,Gender,Homeowner)%>%
+summarise(count=n())
+  
+  
+```
+show total count of only married female that are home owners questn 13
+```{r}
+superm%>%
+  filter(Marital.Status=="M" & Gender=="F" & Homeowner=="Y")%>%
+  group_by(Country,Marital.Status,Gender,Homeowner)%>%
+summarise(count=n())
+```
+show that of only male gender..questn 14
+```{r}
+superm%>%
+  filter(Marital.Status=="M" & Gender=="M" & Homeowner=="Y")%>%
+  group_by(Country,Marital.Status,Gender,Homeowner)%>%
+summarise(count=n())
+```
+##show married couple with more than 2children based on countrt quetsn15
+```{r}
+superm%>%
+  filter(Marital.Status=="M" & Children>"4" & Gender %in% c("M","F"))%>%
+  group_by(Annual.Income,Marital.Status,Gender)%>%
+summarise(count=n())
+```
+#show the average unit sold of each items of the Product.category on a column Chat. questn16
+```{r}
+superm%>%
+  group_by(Product.Category)%>%
+  summarise(avg_Units.Sold_Product.Category=round(mean(Units.Sold),2)) %>%
+  arrange(desc(avg_Units.Sold_Product.Category))%>%
+  ggplot(aes(x =reorder(Product.Category,avg_Units.Sold_Product.Category),
+  y=avg_Units.Sold_Product.Category,fill=Product.Category))+
+  geom_col()+
+  coord_flip()+
+  ylab("avg_Units.Sold_Product.Category")
+ xlab("Product.Category")
+
+  
+  
+
+  
+  
+```
+show the revenue generated on each items of the product.fmaily on a column chart /questn17
+```{r}
+superm%>%
+  group_by(Product.Family)%>%
+  summarise(total_Revenue=sum(Revenue))%>%
+ arrange(desc(total_Revenue))%>%
+  ggplot(aes(x =reorder(Product.Family,total_Revenue),
+  y=total_Revenue,fill=Product.Family))+
+  geom_col()+
+  coord_flip()+
+  ylab("total revenue on each Product.Family")
+xlab("Product.Family")
+```
+##show a chat of the revenue generated in each city  using geom jitter .questn 18
+```{r}
+superm%>%
+  group_by(City)%>%
+  summarise(yearly_Revenue=sum(Revenue))%>%
+  arrange(desc(yearly_Revenue))%>%
+  ggplot(aes(x=City, y=yearly_Revenue))+
+  geom_jitter()
+```
+##show a chat of the revenue generated from the male and female customers in the supermaker using Geom_box plot chat questn 19
+```{r}
+superm%>%
+  
+  group_by(Gender)%>%
+  summarise(yearly_Revenue=sum(Revenue))%>%
+  ggplot(aes(x=Gender, y=yearly_Revenue))+
+  geom_boxplot()
+```
+##show a chat bwteen home owners and that of Non Homeowners by their yearly revenue questn 20
+```{r}
+superm%>%
+  group_by(Homeowner)%>%
+  summarise(total_Revenue=sum(Revenue))%>%
+  arrange(desc(total_Revenue))%>%
+  ggplot(aes(x=reorder(Homeowner,total_Revenue),
+  y=total_Revenue,fill=Homeowner))+
+  geom_col()+
+  coord_flip()+
+  ylab("total revenue on both Home & non Homeowners")
+xlab("Homeowners")
+              
+  
+```
+##give a chat that shows yearly revenue between Home owners and those who are non-Homeowners
+
+```{r}
